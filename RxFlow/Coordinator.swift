@@ -126,6 +126,13 @@ class FlowCoordinator: HasDisposeBag {
                         parentFlowCoordinator.steps.onNext(stepContextForParentFlow)
                     }
                     return (stepContext, [NextFlowItem]())
+                case .forwardToParent(let stepToSendToParentFlow):
+                    if  let parentFlowCoordinator = self.parentFlowCoordinator {
+                        let stepContextForParentFlow = StepContext(with: stepToSendToParentFlow)
+                        stepContextForParentFlow.fromChildFlow = self.flow
+                        parentFlowCoordinator.steps.onNext(stepContextForParentFlow)
+                    }
+                    return (stepContext, [NextFlowItem]())
                 case .none:
                     return (stepContext, [NextFlowItem]())
                 }
